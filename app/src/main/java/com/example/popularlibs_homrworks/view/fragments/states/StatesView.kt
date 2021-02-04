@@ -1,11 +1,11 @@
-package com.example.popularlibs_homrworks.view.fragments
+package com.example.popularlibs_homrworks.view.fragments.states
 
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface UsersView: MvpView {
+interface StatesView: MvpView {
     fun init()
     fun updateList()
 }

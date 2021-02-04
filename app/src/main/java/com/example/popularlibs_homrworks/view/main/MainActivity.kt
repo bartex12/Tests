@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import com.example.popularlibs_homrworks.App
 import com.example.popularlibs_homrworks.R
-import com.example.popularlibs_homrworks.presenter.MainPresenter
+import com.example.popularlibs_homrworks.presenter.main.MainPresenter
 import com.example.popularlibs_homrworks.view.fragments.BackButtonListener
 import moxy.MvpAppCompatActivity
 import moxy.ktx.moxyPresenter
@@ -18,7 +18,11 @@ class MainActivity: MvpAppCompatActivity(), MainView  {
         R.id.container
     )
 
-    val presenter: MainPresenter by moxyPresenter { MainPresenter(App.instance.router) }
+    val presenter: MainPresenter by moxyPresenter {
+        MainPresenter(
+            App.instance.router
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +47,7 @@ class MainActivity: MvpAppCompatActivity(), MainView  {
                 return@onBackPressed
             }
         }
-        Log.d(TAG, "MainActivity onBackPressed setLogin after if ")
+        Log.d(TAG, "MainActivity onBackPressed after if ")
         presenter.backClicked()
     }
 }

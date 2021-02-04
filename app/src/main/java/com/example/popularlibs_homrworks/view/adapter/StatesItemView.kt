@@ -1,7 +1,7 @@
 package com.example.popularlibs_homrworks.view.adapter
 
 
-interface UserItemView:
+interface StatesItemView:
     IItemView {
     fun setLogin(text: String)
 }

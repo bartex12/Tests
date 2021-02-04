@@ -6,18 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.popularlibs_homrworks.R
-import com.example.popularlibs_homrworks.presenter.IUserListPresenter
+import com.example.popularlibs_homrworks.presenter.states.IStateListPresenter
 import com.example.popularlibs_homrworks.view.main.TAG
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_user.view.*
+import kotlinx.android.synthetic.main.item_state.view.*
 
 
-class UsersRVAdapter(val presenter: IUserListPresenter)
-    : RecyclerView.Adapter<UsersRVAdapter.ViewHolder> () {
+class StatesRVAdapter(val presenter: IStateListPresenter)
+    : RecyclerView.Adapter<StatesRVAdapter.ViewHolder> () {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
        val view:View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_user, parent, false )
+            .inflate(R.layout.item_state, parent, false )
         return ViewHolder(view)
     }
 
@@ -37,13 +37,13 @@ class UsersRVAdapter(val presenter: IUserListPresenter)
 
     inner class ViewHolder(override val containerView: View) :
         RecyclerView.ViewHolder(containerView), LayoutContainer,
-        UserItemView {
+        StatesItemView {
 
         override var pos = -1
 
         override fun setLogin(text: String) {
             containerView.tv_login.text = text
-            Log.d(TAG, "UsersRVAdapter ViewHolder setLogin text =$text")
+            Log.d(TAG, "StatesRVAdapter ViewHolder setLogin text =$text")
         }
     }
 }

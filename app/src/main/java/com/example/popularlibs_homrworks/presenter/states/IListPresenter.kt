@@ -1,4 +1,4 @@
-package com.example.popularlibs_homrworks.presenter
+package com.example.popularlibs_homrworks.presenter.states
 
 import com.example.popularlibs_homrworks.view.adapter.IItemView
 

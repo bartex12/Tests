@@ -6,5 +6,5 @@ import kotlinx.android.parcel.Parcelize
 //Аннотация @Parcelize говорит о необходимости сгенерировать весь boilerplate-код,
 // необходимый для работы Parcelable, автоматически, избавляя нас от рутины его написания вручную.
 @Parcelize
-data class GithubUser(val login:String):Parcelable {
+data class State(val name:String):Parcelable {
 }

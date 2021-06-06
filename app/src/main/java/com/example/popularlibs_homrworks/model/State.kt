@@ -8,5 +8,7 @@ import kotlinx.android.parcel.Parcelize
 // необходимый для работы Parcelable, автоматически, избавляя нас от рутины его написания вручную.
 @Parcelize
 data class State(
+
     @Expose val name :String? = null
+
 ):Parcelable

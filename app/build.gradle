@@ -55,6 +55,14 @@ dependencies {
      //cicerone
     implementation 'ru.terrakok.cicerone:cicerone:5.0.0'
 
+    //Мокито
+    testImplementation "org.mockito:mockito-core:3.10.0"
+    testImplementation 'org.mockito:mockito-inline:3.10.0'
+    testImplementation('com.nhaarman:mockito-kotlin:1.5.0') {
+        exclude group: 'org.jetbrains.kotlin'
+        exclude group: 'org.mockito'
+    }
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

@@ -9,7 +9,7 @@ class StateRepo {
         State("Angola")
     )
 
-    fun getUsers(): List<State>{
+    fun getStates(): List<State>{
         return repositories
     }
 }

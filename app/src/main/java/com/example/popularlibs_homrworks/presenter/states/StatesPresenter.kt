@@ -47,7 +47,7 @@ class StatesPresenter(val usersRepo: StateRepo, val router: Router):
     }
 
     private fun loadData() {
-        val users =  usersRepo.getUsers()
+        val users =  usersRepo.getStates()
         statesListPresenter.states.addAll(users)
         viewState.updateList()
     }

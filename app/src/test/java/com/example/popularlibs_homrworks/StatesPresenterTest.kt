@@ -152,8 +152,6 @@ class StatesPresenterTest {
     fun handleStateResponse_Success() {
         //Мокаем ответ
         val response = mock(Response::class.java) as Response<List<State>?>
-        //Мокаем тело ответа
-        val searchResponse = mock(State::class.java)
         //Мокаем список
         val searchResults = listOf(mock(State::class.java))
 

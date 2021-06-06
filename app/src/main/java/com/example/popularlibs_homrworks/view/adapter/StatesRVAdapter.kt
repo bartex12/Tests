@@ -1,19 +1,18 @@
 package com.example.popularlibs_homrworks.view.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.popularlibs_homrworks.R
-import com.example.popularlibs_homrworks.presenter.states.IStateListPresenter
-import com.example.popularlibs_homrworks.view.main.TAG
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_state.view.*
+import com.example.popularlibs_homrworks.model.State
 
 
-class StatesRVAdapter(val presenter: IStateListPresenter)
+class StatesRVAdapter()
     : RecyclerView.Adapter<StatesRVAdapter.ViewHolder> () {
+
+    private var states: List<State> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
        val view:View = LayoutInflater.from(parent.context)
@@ -21,29 +20,22 @@ class StatesRVAdapter(val presenter: IStateListPresenter)
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int = presenter.getCount()
+    override fun getItemCount(): Int = states.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        holder.pos =position
-        presenter.bindView(holder)
-
-        holder.containerView.setOnClickListener{
-            //нельзя иначе осуществить вызов nullable-значения функционального типа.
-            //вызовет itemClickListener, если он не равен null
-            presenter.itemClickListener?.invoke(holder)
-        }
+     holder.bind(states[position])
     }
 
-    inner class ViewHolder(override val containerView: View) :
-        RecyclerView.ViewHolder(containerView), LayoutContainer,
-        StatesItemView {
-
-        override var pos = -1
-
-        override fun setLogin(text: String) {
-            containerView.tv_login.text = text
-            Log.d(TAG, "StatesRVAdapter ViewHolder setLogin text =$text")
-        }
+    fun updateResults(states: List<State>) {
+        this.states = states
+        notifyDataSetChanged()
     }
+
+    inner class ViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView) {
+
+        fun bind(state: State) {
+            itemView.findViewById<TextView>(R.id.tv_name).text = state.name
+        }
+      }
 }

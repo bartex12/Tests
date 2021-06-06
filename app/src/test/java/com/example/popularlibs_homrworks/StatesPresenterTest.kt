@@ -1,7 +1,8 @@
 package com.example.popularlibs_homrworks
 
-import com.example.popularlibs_homrworks.model.StateRepo
+import com.example.popularlibs_homrworks.repository.StateRepo
 import com.example.popularlibs_homrworks.presenter.states.StatesPresenter
+import com.example.popularlibs_homrworks.view.main.MainView
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.Before
@@ -11,33 +12,31 @@ import org.mockito.MockitoAnnotations
 import ru.terrakok.cicerone.Router
 
 class StatesPresenterTest {
-    //	Мы объявили четыре  переменных: Презентер и три мока.
+    //	Мы объявили три  переменных: Презентер и два  мока.
     //	 мы тестируем именно Презентер и ничего кроме заглушек для других классов
     //	нам не понадобится. Таким образом мы избавимся от зависимостей и лишней работы
     //	по инициализации, а также сможем протестировать Презентер в изоляции, не задействуя
     //	инстансы других классов.
 
     private lateinit var presenter: StatesPresenter
-
+    @Mock
+    private lateinit var mainView: MainView
     @Mock
     private lateinit var usersRepo: StateRepo
-    @Mock
-    private lateinit var router: Router
-
 
     @Before
     fun setUp(){
         //Обязательно для аннотаций "@Mock"
         MockitoAnnotations.openMocks(this)
-        presenter = StatesPresenter( usersRepo, router)
+        presenter = StatesPresenter(mainView, usersRepo)
     }
 
     @Test //Проверим вызов метода getStates() у  репозитория
     fun getStates_Test() {
         //Запускаем код, функционал которого хотим протестировать
-        presenter.usersRepo.getStates()
+        presenter.getStates()
         //Убеждаемся, что все работает как надо
-       verify(usersRepo, times(1)).getStates()
+       verify(usersRepo, times(1)).getStates(presenter)
     }
 //
 //    @Test

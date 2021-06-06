@@ -1,59 +1,36 @@
 package com.example.popularlibs_homrworks.presenter.states
 
-import android.util.Log
-import com.example.popularlibs_homrworks.Screens
-import com.example.popularlibs_homrworks.view.fragments.states.StatesView
 import com.example.popularlibs_homrworks.model.State
-import com.example.popularlibs_homrworks.model.StateRepo
-import com.example.popularlibs_homrworks.view.adapter.StatesItemView
-import com.example.popularlibs_homrworks.view.main.TAG
-import moxy.MvpPresenter
-import ru.terrakok.cicerone.Router
+import com.example.popularlibs_homrworks.repository.StateRepo
+import com.example.popularlibs_homrworks.view.main.MainView
+import retrofit2.Response
 
 
 //презентер для работы с фрагментом StatesFragment,  Router для навигации
-class StatesPresenter(val usersRepo: StateRepo, val router: Router):
-    MvpPresenter<StatesView>() {
+class StatesPresenter(private val mainView: MainView, val stateRepo: StateRepo):
+    PresenterView, StateRepo.StateCallback {
 
-    val statesListPresenter =
-        StatesListPresenter()
+    override fun getStates() {
+        mainView.displayLoading(true)
+        stateRepo.getStates(this)
+    }
 
-    class StatesListPresenter :
-        IStateListPresenter {
-
-        val states = mutableListOf<State>()
-
-        override var itemClickListener: ((StatesItemView) -> Unit)? = null
-
-        override fun getCount() = states.size
-
-        override fun bindView(view: StatesItemView) {
-            val state = states[view.pos]
-            view.setLogin(state.name)
+    override fun handleStateResponse(response: Response<List<State>?>?) {
+        mainView.displayLoading(false)
+        if (response != null && response.isSuccessful) {
+            val states = response.body()
+            if (states != null) {
+                mainView.displayStates(states)
+            } else {
+                mainView.displayError("Search results or total count are null")
+            }
+        } else {
+            mainView.displayError("Response is null or unsuccessful")
         }
     }
 
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
-        viewState.init()
-        loadData()
-
-        statesListPresenter.itemClickListener = { itemView ->
-            //переход на экран пользователя
-           val state =  statesListPresenter.states[itemView.pos].name
-            Log.d(TAG, "StatesPresenter itemClickListener state =$state")
-            router.replaceScreen(Screens.DetailsScreen(state))
-        }
-    }
-
-    private fun loadData() {
-        val users =  usersRepo.getStates()
-        statesListPresenter.states.addAll(users)
-        viewState.updateList()
-    }
-
-    fun backPressed(): Boolean {
-        router.exit()
-        return true
+    override fun handleStateError() {
+        mainView.displayLoading(false)
+        mainView.displayError()
     }
 }

@@ -1,15 +1,14 @@
 package com.geekbrains.tests.presenter.details
 
-import com.geekbrains.tests.presenter.PresenterContract
 import com.geekbrains.tests.view.ViewContract
 import com.geekbrains.tests.view.details.ViewDetailsContract
 
 
 internal class DetailsPresenter internal constructor(
-        private var count: Int = 0
+         var count: Int = 0
 ) : PresenterDetailsContract {
 
-    private var viewContract: ViewDetailsContract? = null
+     var viewContract: ViewDetailsContract? = null
 
     override fun onAttach(view: ViewContract?) {
         viewContract = view as ViewDetailsContract

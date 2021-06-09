@@ -1,12 +1,9 @@
 package com.geekbrains.tests.presenter.search
 
-import android.view.View
 import com.geekbrains.tests.model.SearchResponse
-import com.geekbrains.tests.presenter.PresenterContract
 import com.geekbrains.tests.repository.GitHubRepository
 import com.geekbrains.tests.repository.GitHubRepository.GitHubRepositoryCallback
 import com.geekbrains.tests.view.ViewContract
-import com.geekbrains.tests.view.search.MainActivity
 import com.geekbrains.tests.view.search.ViewSearchContract
 import retrofit2.Response
 
@@ -22,7 +19,11 @@ internal class SearchPresenter internal constructor(
     private val repository: GitHubRepository
 ) : PresenterSearchContract, GitHubRepositoryCallback {
 
-    private var  viewContract: ViewSearchContract? = null
+    companion object{
+        const val TAG = "33333"
+    }
+
+     var  viewContract: ViewSearchContract? = null
 
     override fun searchGitHub(searchQuery: String) {
         viewContract?.displayLoading(true)
@@ -31,10 +32,12 @@ internal class SearchPresenter internal constructor(
 
     override fun onAttach(view: ViewContract?) {
         viewContract = view as ViewSearchContract
+        //Log.d(TAG, "onAttach: viewContract = $viewContract ")
     }
 
     override fun onDetach() {
         viewContract = null
+        //Log.d(TAG, "onDetach: viewContract = $viewContract ")
     }
 
     override fun handleGitHubResponse(response: Response<SearchResponse?>?) {

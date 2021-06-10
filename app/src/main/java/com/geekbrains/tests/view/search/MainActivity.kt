@@ -17,6 +17,7 @@ import com.geekbrains.tests.view.details.DetailsActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 
 class MainActivity : AppCompatActivity(), ViewSearchContract {
 
@@ -88,6 +89,11 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         searchResults: List<SearchResult>,
         totalCount: Int
     ) {
+        with(totalCountTextView){
+            visibility = View.VISIBLE
+            text = String.format(Locale.getDefault(),getString(R.string.results_count), totalCount)
+        }
+
         this.totalCount = totalCount
         adapter.updateResults(searchResults)
     }

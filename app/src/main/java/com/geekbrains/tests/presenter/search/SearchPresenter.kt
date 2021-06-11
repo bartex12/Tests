@@ -1,8 +1,8 @@
 package com.geekbrains.tests.presenter.search
 
 import com.geekbrains.tests.model.SearchResponse
-import com.geekbrains.tests.repository.GitHubRepository
-import com.geekbrains.tests.repository.GitHubRepository.GitHubRepositoryCallback
+import com.geekbrains.tests.repository.RepositoryCallback
+import com.geekbrains.tests.repository.RepositoryContract
 import com.geekbrains.tests.view.ViewContract
 import com.geekbrains.tests.view.search.ViewSearchContract
 import retrofit2.Response
@@ -16,8 +16,8 @@ import retrofit2.Response
  */
 
 internal class SearchPresenter internal constructor(
-    private val repository: GitHubRepository
-) : PresenterSearchContract, GitHubRepositoryCallback {
+    private val repository: RepositoryContract
+) : PresenterSearchContract, RepositoryCallback {
 
     companion object{
         const val TAG = "33333"
@@ -25,21 +25,26 @@ internal class SearchPresenter internal constructor(
 
      var  viewContract: ViewSearchContract? = null
 
+    //***метод интерфейса PresenterSearchContract
     override fun searchGitHub(searchQuery: String) {
         viewContract?.displayLoading(true)
+        //$$$ метод интерфейса RepositoryContract
         repository.searchGithub(searchQuery, this)
     }
 
+    //*** метод интерфейса PresenterSearchContract -> PresenterContract
     override fun onAttach(view: ViewContract?) {
         viewContract = view as ViewSearchContract
         //Log.d(TAG, "onAttach: viewContract = $viewContract ")
     }
 
+    //*** метод интерфейса PresenterSearchContract -> PresenterContract
     override fun onDetach() {
         viewContract = null
         //Log.d(TAG, "onDetach: viewContract = $viewContract ")
     }
 
+    //### метод интерфейса RepositoryCallback
     override fun handleGitHubResponse(response: Response<SearchResponse?>?) {
         viewContract?.displayLoading(false)
         if (response != null && response.isSuccessful) {
@@ -59,6 +64,7 @@ internal class SearchPresenter internal constructor(
         }
     }
 
+    //### метод интерфейса RepositoryCallback
     override fun handleGitHubError() {
         viewContract?.displayLoading(false)
         viewContract?.displayError()

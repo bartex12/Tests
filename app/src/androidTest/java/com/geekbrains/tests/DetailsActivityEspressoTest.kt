@@ -83,6 +83,7 @@ class DetailsActivityEspressoTest {
 
     //Здесь для проверки видимости мы используем подход с проверкой флага Visibility у View:
     // проверяем у кнопки именно этот параметр с помощью специального метода withEffectiveVisibility.
+    //Метод withEffectiveVisibility() возвращает VISIBLE только если все вью в иерархии видны
     @Test
     fun activityButtons_AreEffectiveVisible() {
         onView(withId(R.id.decrementButton)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))

@@ -2,10 +2,8 @@ package com.geekbrains.tests
 
 import android.view.View
 import android.widget.EditText
-import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
-import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -30,41 +28,11 @@ class MainActivityEspressoTest {
         scenario = ActivityScenario.launch(MainActivity::class.java)
     }
 
-    @Test
-    //1
-    fun  activitySearch_IsWorking(){
-        //Выделяем по тапу наш EditText
-        onView(withId(R.id.searchEditText)).perform(click())
-        //Вставляем в него текст запроса
-        onView(withId(R.id.searchEditText)).perform(replaceText("algol"), closeSoftKeyboard())
-        //Нажимаем на кнопку поиска на виртуальной клавиатуре
-        onView(withId(R.id.searchEditText)).perform(pressImeActionButton())
+    //1 тест activitySearch_IsWorking() разбит на два  для разных конфигураций
+    // - real и fake -  и разбросан по разным папкам, которые видны в
+    // конкретной конфигурации Build Variant
+    //варианты Build Variant задаются в  productFlavors в build.gradle
 
-        if (BuildConfig.TYPE == MainActivity.FAKE) {
-            onView(withId(R.id.totalCountTextViewMain)).check(matches(withText("Number of results: 42")))
-        }else{
-            //“замораживаем” UI на 2 секунды.
-            onView(isRoot()).perform(delay())
-            //Сравниваем отображаемый текст с ожидаемым результатом.
-            onView(withId(R.id.totalCountTextViewMain)).check(matches(withText("Number of results: 2415")))
-        }
-    }
-
-    //Будем возвращать свой собственный ViewAction, переопределив методы интерфейса,
-    // который используется в методе perform():
-    private fun delay(): ViewAction? {
-        return object : ViewAction {
-            //getConstraints() будет возвращать root-view нашей кнопки;
-            override fun getConstraints(): Matcher<View> = isRoot()
-            //getDescription() возвращает описание нашего Action
-            override fun getDescription(): String = "wait for $2 seconds"
-            //perform() занимается непосредственно Action’ом: нас интересует UiController, у
-            // которого есть нужный нам метод. Мы “замораживаем” UI на 2 секунды
-            override fun perform(uiController: UiController, v: View?) {
-                uiController.loopMainThreadForAtLeast(2000)
-            }
-        }
-    }
 
     @Test
     //2 MainActivity NotNull

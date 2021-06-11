@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
     private fun createRepository(): RepositoryContract {
 
         return GitHubRepository(createRetrofit().create(GitHubApi::class.java))
-        
+
         //так было до того, как разбросал по разным директориям
 //        return if (BuildConfig.TYPE == FAKE) {
 //            GitHubRepository()

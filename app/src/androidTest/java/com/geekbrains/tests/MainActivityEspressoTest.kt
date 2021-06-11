@@ -1,19 +1,15 @@
 package com.geekbrains.tests
 
-import android.view.View
 import android.widget.EditText
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.geekbrains.tests.view.search.MainActivity
 import junit.framework.TestCase
-import org.hamcrest.Matcher
 import org.junit.After
 import org.junit.Before
 import org.junit.Test

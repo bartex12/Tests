@@ -25,7 +25,7 @@ class MainActivityEspressoTest {
     }
 
     @Test
-    //1
+    //1 тест может не пройти, если изменится количество репозиториев на GitHub
     fun  activitySearch_IsWorking(){
         //Выделяем по тапу наш EditText
         Espresso.onView(ViewMatchers.withId(R.id.searchEditText)).perform(ViewActions.click())

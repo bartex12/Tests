@@ -15,7 +15,6 @@ import com.geekbrains.tests.presenter.search.SearchPresenter
 import com.geekbrains.tests.repository.GitHubApi
 import com.geekbrains.tests.repository.GitHubRepository
 import com.geekbrains.tests.presenter.RepositoryContract
-import com.geekbrains.tests.repository.FakeGitHubRepository
 import com.geekbrains.tests.view.details.DetailsActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Retrofit
@@ -85,12 +84,15 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
     }
 
     private fun createRepository(): RepositoryContract {
-        //return GitHubRepository(createRetrofit().create(GitHubApi::class.java))
-        return if (BuildConfig.TYPE == FAKE) {
-            FakeGitHubRepository()
-        } else {
-            GitHubRepository(createRetrofit().create(GitHubApi::class.java))
-        }
+
+        return GitHubRepository(createRetrofit().create(GitHubApi::class.java))
+        
+        //так было до того, как разбросал по разным директориям
+//        return if (BuildConfig.TYPE == FAKE) {
+//            GitHubRepository()
+//        } else {
+//            GitHubRepository(createRetrofit().create(GitHubApi::class.java))
+//        }
     }
 
     private fun createRetrofit(): Retrofit {

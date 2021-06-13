@@ -43,6 +43,11 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         setUI()
     }
 
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "onStop ")
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "onDestroy ")

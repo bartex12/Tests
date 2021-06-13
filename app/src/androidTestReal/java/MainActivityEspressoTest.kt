@@ -1,4 +1,5 @@
 import android.view.View
+import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.UiController
@@ -9,6 +10,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.geekbrains.tests.R
 import com.geekbrains.tests.view.search.MainActivity
+import junit.framework.TestCase
 import org.hamcrest.Matcher
 import org.junit.After
 import org.junit.Before
@@ -58,6 +60,14 @@ class MainActivityEspressoTest {
                 uiController.loopMainThreadForAtLeast(2000)
             }
         }
+    }
+
+    @Test
+    //10- проверяем переход в Stopped после нажатия на кнопку перехода на детали
+    fun activityButtons_MainStopped() {
+        TestCase.assertEquals(Lifecycle.State.RESUMED, scenario.state)
+        Espresso.onView(ViewMatchers.withId(R.id.toDetailsActivityButton)).perform(ViewActions.click())
+        TestCase.assertNotSame(Lifecycle.State.RESUMED, scenario.state)
     }
 
     @After

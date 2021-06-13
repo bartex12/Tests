@@ -25,7 +25,6 @@ class MainActivityEspressoTest {
     fun setup() {
         scenario = ActivityScenario.launch(MainActivity::class.java)
     }
-
     @Test
     //1 тест может не пройти, если изменится количество репозиториев на GitHub
     fun  activitySearch_IsWorking(){

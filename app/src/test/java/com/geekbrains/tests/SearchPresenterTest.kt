@@ -18,13 +18,10 @@ import retrofit2.Response
 class SearchPresenterTest {
 
     private lateinit var presenter: SearchPresenter
-
     @Mock
     private lateinit var repository: GitHubRepository
-
     @Mock
     private lateinit var viewContract: ViewSearchContract
-
     @Before
     fun setUp() {
         //Обязательно для аннотаций "@Mock"
@@ -156,7 +153,6 @@ class SearchPresenterTest {
 
     @Test
    fun onAttach_AssertNotNull(){
-
         val   view: ViewContract = mock(ViewSearchContract::class.java)
         presenter.onAttach(view )
         assertNotNull(presenter.viewContract)

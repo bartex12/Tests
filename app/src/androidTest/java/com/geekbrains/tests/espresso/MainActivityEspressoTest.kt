@@ -3,9 +3,12 @@ package com.geekbrains.tests.espresso
 import android.widget.EditText
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.geekbrains.tests.R
@@ -93,6 +96,14 @@ class MainActivityEspressoTest {
     fun activityButtons_AreEffectiveVisible() {
         onView(withId(R.id.toDetailsActivityButton)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
         onView(withId(R.id.searchEditText)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
+
+    @Test
+    //10- проверяем переход в Stopped после нажатия на кнопку перехода на детали
+    fun activityButtons_MainStopped() {
+        TestCase.assertEquals(Lifecycle.State.RESUMED, scenario.state)
+        Espresso.onView(ViewMatchers.withId(R.id.toDetailsActivityButton)).perform(ViewActions.click())
+        TestCase.assertNotSame(Lifecycle.State.RESUMED, scenario.state)
     }
 
     @After

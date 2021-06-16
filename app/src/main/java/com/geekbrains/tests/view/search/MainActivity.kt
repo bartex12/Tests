@@ -1,12 +1,18 @@
 package com.geekbrains.tests.view.search
 
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.Settings
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import com.geekbrains.tests.R
 import com.geekbrains.tests.model.SearchResult
 import com.geekbrains.tests.presenter.RepositoryContract
@@ -40,6 +46,12 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
 
         Log.d(TAG, "onCreate  onAttach")
         presenter.onAttach(this)
+
+//        val packman: PackageManager = packageManager
+//        val intent: Intent = Intent(Settings.System.SCREEN_BRIGHTNESS)
+//        val pack:String =  intent.resolveActivity(packman).packageName
+//        Log.d(TAG, "onCreate  pack = $pack")
+
         setUI()
     }
 
@@ -58,8 +70,24 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         toDetailsActivityButton.setOnClickListener {
             startActivity(DetailsActivity.getIntent(this, totalCount))
         }
+        setSearchListener()
         setQueryListener()
         setRecyclerView()
+    }
+
+    private fun setSearchListener() {
+        searchMainButton.setOnClickListener {
+            val query = searchEditText.text.toString()
+            if (query.isNotBlank()) {
+                presenter.searchGitHub(query)
+            } else {
+                Toast.makeText(
+                    this@MainActivity,
+                    getString(R.string.enter_search_word),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     private fun setRecyclerView() {

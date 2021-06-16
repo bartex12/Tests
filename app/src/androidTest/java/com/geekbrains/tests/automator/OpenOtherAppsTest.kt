@@ -4,9 +4,7 @@ import android.widget.TextView
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SdkSuppress
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiScrollable
-import androidx.test.uiautomator.UiSelector
+import androidx.test.uiautomator.*
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,6 +16,10 @@ import org.junit.runner.RunWith
 class OpenOtherAppsTest {
 
     private val uiDevice: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
+    companion object {
+        private const val TIMEOUT = 5000L
+    }
 
     @Test
     fun test_OpenSettings() {
@@ -65,4 +67,34 @@ class OpenOtherAppsTest {
             uiDevice.findObject(UiSelector().packageName("com.android.settings"))
         Assert.assertTrue(settingsValidation.exists())
     }
+
+    @Test
+    //заходим в настройки  Bluetooth
+    fun test_OpenSettingsScreen() {
+        uiDevice.pressHome()
+        var appViews = UiScrollable(UiSelector().scrollable(false))
+        //Находим в контейнере настройки по названию иконки
+        val settingsApp = appViews
+            .getChildByText(
+                UiSelector()
+                    .className(TextView::class.java.name),
+                "Настройки"
+            )
+        //Открываем
+        settingsApp.clickAndWaitForNewWindow()
+        //разрешаем скролл
+        appViews = UiScrollable(UiSelector().scrollable(true))
+        //прокручиваем до Bluetooth
+        appViews.scrollTextIntoView("Bluetooth" )
+        //кликаем на Bluetooth
+        uiDevice.findObject(By.text("Bluetooth")).click()
+        //ждём появления текста Имя устройства
+        uiDevice.wait(Until.hasObject(By.text("Имя устройства").depth(0)),
+            TIMEOUT)
+        //находим объект с текстом Имя устройства
+       val bl =  uiDevice.findObject(By.text("Имя устройства"))
+        //проверяем, что есть такой текст
+        Assert.assertEquals( bl.text.toString(),"Имя устройства")
+    }
+
 }

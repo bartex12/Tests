@@ -61,14 +61,6 @@ class MainActivityEspressoTest {
         }
     }
 
-    @Test
-    //10- проверяем переход в Stopped после нажатия на кнопку перехода на детали
-    fun activityButtons_MainStopped() {
-        TestCase.assertEquals(Lifecycle.State.RESUMED, scenario.state)
-        Espresso.onView(ViewMatchers.withId(R.id.toDetailsActivityButton)).perform(ViewActions.click())
-        TestCase.assertNotSame(Lifecycle.State.RESUMED, scenario.state)
-    }
-
     @After
     fun close() {
         scenario.close()

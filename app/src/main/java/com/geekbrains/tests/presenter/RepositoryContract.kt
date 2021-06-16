@@ -1,4 +1,6 @@
-package com.geekbrains.tests.repository
+package com.geekbrains.tests.presenter
+
+import com.geekbrains.tests.repository.RepositoryCallback
 
 
 interface RepositoryContract {

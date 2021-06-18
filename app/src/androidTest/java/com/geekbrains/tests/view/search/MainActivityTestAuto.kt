@@ -19,6 +19,9 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+// генерируемые через Test Recorder примитивны: они умеют только нажимать на элементы
+// и удостоверяться, что элементы существуют или их содержание соответствует
+// ожиданиям (для текстовых элементов). На большее этот инструментарий неспособен.
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class MainActivityTestAuto {

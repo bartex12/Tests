@@ -9,6 +9,9 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.geekbrains.tests.R
+import com.geekbrains.tests.TEST_NUMBER_OF_RESULTS_MINUS_1
+import com.geekbrains.tests.TEST_NUMBER_OF_RESULTS_PLUS_1
+import com.geekbrains.tests.TEST_NUMBER_OF_RESULTS_ZERO
 import com.geekbrains.tests.view.details.DetailsActivity
 import junit.framework.TestCase
 import org.junit.After
@@ -51,7 +54,7 @@ class DetailsActivityEspressoTest {
     //тест с использованием espresso
     fun activityTextView_HasText() {
         //на вью с id totalCountTextView проконтролировать соответствие тексту Number of results: 0
-       onView(withId(R.id.totalCountTextView)).check(matches(withText("Number of results: 0")))
+       onView(withId(R.id.totalCountTextView)).check(matches(withText(TEST_NUMBER_OF_RESULTS_ZERO)))
     }
 
     @Test
@@ -96,13 +99,14 @@ class DetailsActivityEspressoTest {
     @Test
     fun activityButtonIncrement_IsWorking() {
         onView(withId(R.id.incrementButton)).perform(click())
-        onView(withId(R.id.totalCountTextView)).check(matches(withText("Number of results: 1")))
+        onView(withId(R.id.totalCountTextView)).check(matches(withText(TEST_NUMBER_OF_RESULTS_PLUS_1)))
     }
 
     @Test
     fun activityButtonDecrement_IsWorking() {
         onView(withId(R.id.decrementButton)).perform(click())
-        onView(withId(R.id.totalCountTextView)).check(matches(withText("Number of results: -1")))
+        onView(withId(R.id.totalCountTextView)).check(matches(withText(
+            TEST_NUMBER_OF_RESULTS_MINUS_1)))
     }
 
     @After

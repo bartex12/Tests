@@ -85,24 +85,4 @@ class GitHubRepositoryTest {
         verify(gitHubRepositoryCallBack, times(1)).handleGitHubError()
     }
 
-//    @Test
-//    fun searchGithub_TestCallback_WithMock() {
-//        val searchQuery = "some query"
-//        val call = mock(Call::class.java) as Call<SearchResponse?>
-//        val callBack = mock(Callback::class.java) as Callback<SearchResponse?>
-//        val gitHubRepositoryCallBack = mock(GitHubRepositoryCallback::class.java)
-//        val response = mock(Response::class.java) as Response<SearchResponse?>
-//
-//        `when`(gitHubApi.searchGithub(searchQuery)).thenReturn(call)
-//        `when`(call.enqueue(callBack)).then {
-//            callBack.onResponse(any(), any())
-//        }
-//        `when`(callBack.onResponse(any(), any())).then {
-//            gitHubRepositoryCallBack.handleGitHubResponse(response)
-//        }
-//
-//        repository.searchGithub(searchQuery, gitHubRepositoryCallBack)
-//
-//        verify(gitHubRepositoryCallBack, times(1)).handleGitHubResponse(response)
-//    }
 }

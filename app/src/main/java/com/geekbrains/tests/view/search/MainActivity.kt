@@ -47,11 +47,6 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         Log.d(TAG, "onCreate  onAttach")
         presenter.onAttach(this)
 
-//        val packman: PackageManager = packageManager
-//        val intent: Intent = Intent(Settings.System.SCREEN_BRIGHTNESS)
-//        val pack:String =  intent.resolveActivity(packman).packageName
-//        Log.d(TAG, "onCreate  pack = $pack")
-
         setUI()
     }
 

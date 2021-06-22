@@ -4,9 +4,8 @@ import com.geekbrains.tests.view.ViewContract
 import com.geekbrains.tests.view.details.ViewDetailsContract
 
 
-internal class DetailsPresenter internal constructor(
-         var count: Int = 0
-) : PresenterDetailsContract {
+internal class DetailsPresenter internal constructor( var count: Int = 0)
+    : PresenterDetailsContract {
 
      var viewContract: ViewDetailsContract? = null
 

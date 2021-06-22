@@ -63,6 +63,7 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
 
     private fun setUI() {
         toDetailsActivityButton.setOnClickListener {
+            Log.d(TAG, "setUI setOnClickListener totalCount = $totalCount")
             startActivity(DetailsActivity.getIntent(this, totalCount))
         }
         setSearchListener()

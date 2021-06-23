@@ -1,5 +1,6 @@
 package com.geekbrains.tests.presenter.search
 
+import android.util.Log
 import com.geekbrains.tests.model.SearchResponse
 import com.geekbrains.tests.repository.RepositoryCallback
 import com.geekbrains.tests.presenter.RepositoryContract
@@ -29,16 +30,15 @@ internal class SearchPresenter internal constructor(
     }
 
      var  viewContract: ViewSearchContract? = null
+     private var compositeDisposable:CompositeDisposable = CompositeDisposable()
 
     //*** метод интерфейса PresenterSearchContract -> PresenterContract
     override fun onAttach(view: ViewContract?) {
         viewContract = view as ViewSearchContract
-        //Log.d(TAG, "onAttach: viewContract = $viewContract ")
     }
 
     override fun searchGitHub(searchQuery: String) {
         //Dispose
-        val compositeDisposable = CompositeDisposable()
         compositeDisposable.add(
             repository.searchGithub(searchQuery)
                 .subscribeOn(appSchedulerProvider.io())
@@ -70,21 +70,13 @@ internal class SearchPresenter internal constructor(
         )
     }
 
-//    //***метод интерфейса PresenterSearchContract
-//    override fun searchGitHub(searchQuery: String) {
-//        viewContract?.displayLoading(true)
-//        //$$$ метод интерфейса RepositoryContract
-//        repository.searchGithub(searchQuery, this)
-//    }
-
-
     //*** метод интерфейса PresenterSearchContract -> PresenterContract
     override fun onDetach() {
         viewContract = null
-        //Log.d(TAG, "onDetach: viewContract = $viewContract ")
+        compositeDisposable.clear()
     }
 
-    //### метод интерфейса RepositoryCallback
+    //### метод интерфейса RepositoryCallback - в Rx код не работает, но удалять нельзя
     override fun handleGitHubResponse(response: Response<SearchResponse?>?) {
         viewContract?.displayLoading(false)
         if (response != null && response.isSuccessful) {
@@ -104,7 +96,7 @@ internal class SearchPresenter internal constructor(
         }
     }
 
-    //### метод интерфейса RepositoryCallback
+    //### метод интерфейса RepositoryCallback - в Rx код не работает, но удалять нельзя
     override fun handleGitHubError() {
         viewContract?.displayLoading(false)
         viewContract?.displayError()

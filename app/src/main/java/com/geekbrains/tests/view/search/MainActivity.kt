@@ -130,6 +130,9 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         searchResults: List<SearchResult>,
         totalCount: Int
     ) {
+
+        Log.d(TAG, "*** MainActivity displaySearchResults totalCount = $totalCount")
+
         with(totalCountTextViewMain){
             visibility = View.VISIBLE
             text = String.format(Locale.getDefault(),getString(R.string.results_count), totalCount)

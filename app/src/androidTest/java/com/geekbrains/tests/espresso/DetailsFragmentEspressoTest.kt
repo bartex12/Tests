@@ -51,7 +51,7 @@ class DetailsFragmentEspressoTest {
 
     @Test
     fun fragment_testSetCountMethod() {
-        //d методичке ошибка - onFragment вместо withFragment
+        //в методичке ошибка - onFragment вместо withFragment
         scenario.withFragment {
          setCount(10)
         }

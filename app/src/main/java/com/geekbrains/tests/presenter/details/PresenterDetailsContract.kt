@@ -6,5 +6,5 @@ internal interface PresenterDetailsContract : PresenterContract {
     fun setCounter(count: Int)
     fun onIncrement()
     fun onDecrement()
-
+// onAttach(view:ViewContract?)  и onDetach() достаются от PresenterContract
 }

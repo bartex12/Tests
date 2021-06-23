@@ -64,8 +64,7 @@ class MainActivityRecyclerViewTest {
             onView(withId(R.id.recyclerView))
                 .perform(
                     RecyclerViewActions.actionOnItemAtPosition<SearchResultAdapter.SearchResultViewHolder>(
-                        0,
-                        click()
+                        0, click()
                     )
                 )
         }

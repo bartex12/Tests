@@ -7,8 +7,10 @@ import com.geekbrains.tests.model.SearchResponse
 import com.geekbrains.tests.presenter.RepositoryContract
 import com.geekbrains.tests.repository.GitHubApi
 import com.geekbrains.tests.repository.GitHubRepository
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
+import kotlinx.coroutines.*
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -17,7 +19,7 @@ class SearchViewModel(
         private val repository: RepositoryContract = GitHubRepository(
                 Retrofit.Builder()
                         .baseUrl(BASE_URL)
-                        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                        .addCallAdapterFactory(CoroutineCallAdapterFactory())
                         .addConverterFactory(GsonConverterFactory.create())
                         .build().create(GitHubApi::class.java)),
         private val appSchedulerProvider: SchedulerProvider = SearchSchedulerProvider()
@@ -30,42 +32,46 @@ class SearchViewModel(
 
     private val liveData = MutableLiveData<ScreenState>()
 
+    private val viewModelCoroutineScope = CoroutineScope(
+        Dispatchers.Main
+                + SupervisorJob()
+                + CoroutineExceptionHandler { _, throwable ->
+            handleError(throwable)
+        })
+
 
     fun subscribeToLiveData(): LiveData<ScreenState>{
         return liveData
     }
 
     fun searchGitHub(searchQuery: String) {
-        //Dispose
-        val compositeDisposable = CompositeDisposable()
-        compositeDisposable.add(
-                repository.searchGithub(searchQuery)
-                        .subscribeOn(appSchedulerProvider.io())
-                        .observeOn(appSchedulerProvider.ui())
-                        .doOnSubscribe {liveData.value =  ScreenState.Loading }
-                        .subscribeWith(object : DisposableObserver<SearchResponse>() {
+        liveData.value = ScreenState.Loading
+        viewModelCoroutineScope.launch {
+            val searchResponse = repository.searchGithubAsync(searchQuery)
+            val searchResults = searchResponse.searchResults
+            val totalCount = searchResponse.totalCount
+            if (searchResults != null && totalCount != null) {
+                liveData.value = ScreenState.Working(searchResponse)
+            } else {
+                liveData.value =
+                    ScreenState.Error(Throwable("Search results or total count are null"))
+            }
+        }
+    }
 
-                            override fun onNext(searchResponse: SearchResponse) {
-                                //начинаем загрузку данных
-                                liveData.value = ScreenState.Loading
-                                val searchResults = searchResponse.searchResults
-                                val totalCount = searchResponse.totalCount
-                                //полезное разделение на пустой и не пустой результат
-                                if (searchResults != null && totalCount != null) {
-                                    liveData.value =ScreenState.Working(searchResponse)
-                                } else {
-                                    liveData.value =ScreenState.Error(Throwable("Search results or total count are null"))
-                                }
-                            }
-                            //ошибка
-                            override fun onError(e: Throwable) {
-                                liveData.value =ScreenState.Error(Throwable("Response is null or unsuccessful"))
-                            }
+    private fun handleError(error: Throwable) {
+        liveData.value =
+            ScreenState.Error(
+                Throwable(
+                    error.message ?: "Response is null or unsuccessful"
+                )
+            )
 
-                            override fun onComplete() {}
-                        }
-                        )
-        )
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelCoroutineScope.coroutineContext.cancelChildren()
     }
 
 }

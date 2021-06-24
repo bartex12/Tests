@@ -6,6 +6,7 @@ import io.reactivex.Observable
 
 
 interface RepositoryContract {
+    //запрос с использованием колбека
     fun searchGithub(
         query: String,
         callback: RepositoryCallback
@@ -16,4 +17,9 @@ interface RepositoryContract {
     fun searchGithub(
         query: String
     ): Observable<SearchResponse>
+
+    //метод, работающий с Корутинами:
+    suspend fun searchGithubAsync(
+        query: String
+    ): SearchResponse
 }

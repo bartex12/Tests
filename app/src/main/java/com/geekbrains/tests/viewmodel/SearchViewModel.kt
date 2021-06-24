@@ -21,8 +21,7 @@ class SearchViewModel(
                         .baseUrl(BASE_URL)
                         .addCallAdapterFactory(CoroutineCallAdapterFactory())
                         .addConverterFactory(GsonConverterFactory.create())
-                        .build().create(GitHubApi::class.java)),
-        private val appSchedulerProvider: SchedulerProvider = SearchSchedulerProvider()
+                        .build().create(GitHubApi::class.java))
 ): ViewModel() {
 
     companion object {

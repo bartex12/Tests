@@ -5,19 +5,16 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.geekbrains.tests.model.SearchResponse
-import com.geekbrains.tests.presenter.ScheduleProviderStub
 import com.geekbrains.tests.repository.GitHubRepository
 import com.geekbrains.tests.viewmodel.ScreenState
 import com.geekbrains.tests.viewmodel.SearchViewModel
-import io.reactivex.Observable
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.robolectric.annotation.Config
 

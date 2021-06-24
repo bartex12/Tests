@@ -10,18 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.geekbrains.tests.R
-import com.geekbrains.tests.model.SearchResult
-import com.geekbrains.tests.presenter.RepositoryContract
-import com.geekbrains.tests.repository.GitHubApi
-import com.geekbrains.tests.repository.GitHubRepository
 import com.geekbrains.tests.view.details.DetailsActivity
 import com.geekbrains.tests.viewmodel.ScreenState
 import com.geekbrains.tests.viewmodel.SearchViewModel
 import kotlinx.android.synthetic.main.activity_main.*
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
-import java.util.*
 
 
 class MainActivity : AppCompatActivity() {

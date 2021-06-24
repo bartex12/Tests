@@ -1,5 +1,6 @@
-package com.geekbrains.tests.view.search
+package com.geekbrains.tests.viewmodel
 
+import com.geekbrains.tests.viewmodel.SchedulerProvider
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

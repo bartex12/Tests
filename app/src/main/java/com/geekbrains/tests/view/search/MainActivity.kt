@@ -1,42 +1,36 @@
 package com.geekbrains.tests.view.search
 
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.provider.Settings
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.geekbrains.tests.R
 import com.geekbrains.tests.model.SearchResult
 import com.geekbrains.tests.presenter.RepositoryContract
-import com.geekbrains.tests.presenter.search.PresenterSearchContract
-import com.geekbrains.tests.presenter.search.SearchPresenter
 import com.geekbrains.tests.repository.GitHubApi
 import com.geekbrains.tests.repository.GitHubRepository
 import com.geekbrains.tests.view.details.DetailsActivity
+import com.geekbrains.tests.viewmodel.ScreenState
+import com.geekbrains.tests.viewmodel.SearchViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 
-class MainActivity : AppCompatActivity(), ViewSearchContract {
 
+class MainActivity : AppCompatActivity() {
 
     private val adapter = SearchResultAdapter()
-    private val presenter: PresenterSearchContract = SearchPresenter(createRepository())
     private var totalCount: Int = 0
-
+    lateinit var viewModel:SearchViewModel
 
     companion object {
-        const val BASE_URL = "https://api.github.com"
         const val TAG = "33333"
         const val FAKE = "FAKE"
     }
@@ -45,21 +39,43 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Log.d(TAG, "onCreate  onAttach")
-        presenter.onAttach(this)
+        viewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
 
         setUI()
+        viewModel.subscribeToLiveData() //метод SearchViewModel
+                .observe(this, Observer<ScreenState> {
+                    onStateChange(it)
+                })
     }
 
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG, "onStop ")
-    }
+    private fun onStateChange(screenState: ScreenState){
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG, "onDestroy ")
-        presenter.onDetach()
+        when(screenState){
+            is ScreenState.Working -> {
+                progressBar.visibility = View.GONE
+
+                val searchResponse = screenState.searchResponse
+                val totalCount = searchResponse.totalCount
+                Log.d(TAG, "*** MainActivity onStateChange totalCount = $totalCount")
+
+                with(totalCountTextViewMain){
+                    visibility = View.VISIBLE
+                    //хитрая запись Number of results: %d
+                    text = String.format(getString(R.string.results_count), totalCount)
+                }
+
+                this.totalCount = totalCount!! //проверки были во ViewModel
+                adapter.updateResults(searchResponse.searchResults!!)  //проверки были во ViewModel
+            }
+            is ScreenState.Loading -> {
+                progressBar.visibility = View.VISIBLE
+            }
+
+            is ScreenState.Error -> {
+                progressBar.visibility = View.GONE
+                Toast.makeText(this, screenState.error.message, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setUI() {
@@ -76,7 +92,7 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         searchMainButton.setOnClickListener {
             val query = searchEditText.text.toString()
             if (query.isNotBlank()) {
-                presenter.searchGitHub(query)
+                viewModel.searchGitHub(query)
             } else {
                 Toast.makeText(
                     this@MainActivity,
@@ -97,7 +113,7 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val query = searchEditText.text.toString()
                 if (query.isNotBlank()) {
-                    presenter.searchGitHub(query)
+                    viewModel.searchGitHub(query)
                     return@OnEditorActionListener true
                 } else {
                     Toast.makeText(
@@ -111,51 +127,4 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
             false
         })
     }
-
-    private fun createRepository(): RepositoryContract {
-        //название у репозитория один, но они разные в зависимости от конфигурации,
-        // которая задана в  productFlavors в build.gradle
-        return GitHubRepository(createRetrofit().create(GitHubApi::class.java))
-    }
-
-    private fun createRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .build()
-    }
-
-    override fun displaySearchResults(
-        searchResults: List<SearchResult>,
-        totalCount: Int
-    ) {
-
-        Log.d(TAG, "*** MainActivity displaySearchResults totalCount = $totalCount")
-
-        with(totalCountTextViewMain){
-            visibility = View.VISIBLE
-            text = String.format(Locale.getDefault(),getString(R.string.results_count), totalCount)
-        }
-
-        this.totalCount = totalCount
-        adapter.updateResults(searchResults)
-    }
-
-    override fun displayError() {
-        Toast.makeText(this, getString(R.string.undefined_error), Toast.LENGTH_SHORT).show()
-    }
-
-    override fun displayError(error: String) {
-        Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun displayLoading(show: Boolean) {
-        if (show) {
-            progressBar.visibility = View.VISIBLE
-        } else {
-            progressBar.visibility = View.GONE
-        }
-    }
-
 }

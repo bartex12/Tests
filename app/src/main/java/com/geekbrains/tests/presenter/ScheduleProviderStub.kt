@@ -1,6 +1,6 @@
-package com.geekbrains.tests.stubs
+package com.geekbrains.tests.presenter
 
-import com.geekbrains.tests.view.search.SchedulerProvider
+import com.geekbrains.tests.viewmodel.SchedulerProvider
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 

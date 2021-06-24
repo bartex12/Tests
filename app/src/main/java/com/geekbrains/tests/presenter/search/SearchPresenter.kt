@@ -1,12 +1,11 @@
 package com.geekbrains.tests.presenter.search
 
-import android.util.Log
 import com.geekbrains.tests.model.SearchResponse
 import com.geekbrains.tests.repository.RepositoryCallback
 import com.geekbrains.tests.presenter.RepositoryContract
 import com.geekbrains.tests.view.ViewContract
-import com.geekbrains.tests.view.search.SchedulerProvider
-import com.geekbrains.tests.view.search.SearchSchedulerProvider
+import com.geekbrains.tests.viewmodel.SchedulerProvider
+import com.geekbrains.tests.viewmodel.SearchSchedulerProvider
 import com.geekbrains.tests.view.search.ViewSearchContract
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver

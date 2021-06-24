@@ -1,8 +1,8 @@
-package com.geekbrains.tests.view.search
+package com.geekbrains.tests.viewmodel
 
 import io.reactivex.Scheduler
 
-internal interface SchedulerProvider {
+interface SchedulerProvider {
     fun ui(): Scheduler
     fun io(): Scheduler
 }

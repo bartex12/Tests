@@ -25,15 +25,12 @@ internal class DetailsPresenter
     }
 
     override fun setCounter(count: Int) {
-        Log.d(TAG, "DetailsPresenter setCounter: count = $count")
         this.count = count
     }
 
     override fun onIncrement() {
-        Log.d(TAG, "DetailsPresenter onIncrement: count before= $count")
         count++
         viewContract?.setCount(count)
-        Log.d(TAG, "DetailsPresenter onIncrement: count after= $count")
     }
 
     override fun onDecrement() {

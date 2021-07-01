@@ -34,15 +34,6 @@ class SearchPresenterTest {
         viewContract =  presenter.viewContract as ViewSearchContract
     }
 
-    @Test //Проверим вызов метода searchGitHub() у нашего Репозитория
-    fun searchGitHub_Test() {
-        val searchQuery = "some query"
-        //Запускаем код, функционал которого хотим протестировать
-        presenter.searchGitHub("some query")
-        //Убеждаемся, что все работает как надо
-        verify(repository, times(1)).searchGithub(searchQuery, presenter)
-    }
-
     @Test //Проверяем работу метода handleGitHubError()
     fun handleGitHubError_Test() {
         //Вызываем у Презентера метод handleGitHubError()

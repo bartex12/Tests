@@ -47,7 +47,7 @@ class SearchViewModelTest {
 
     @Before
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
+        MockitoAnnotations.openMocks(this)
         //в конструктор ВьюМодели мы передаем Мок репозитория и заглушку для тестирования rx.
         // Это именно то, что нам нужно для проведения тестов
         searchViewModel = SearchViewModel(repository)

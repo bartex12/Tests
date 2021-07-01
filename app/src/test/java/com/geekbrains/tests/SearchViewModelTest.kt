@@ -14,7 +14,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
+import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 import org.robolectric.annotation.Config
 
@@ -53,6 +53,20 @@ class SearchViewModelTest {
         searchViewModel = SearchViewModel(repository)
     }
 
+    //********** Проверим вызов метода searchGithubAsync() у нашего Репозитория ***********
+    @Test
+    fun coroutines_Test_HW() {
+        testCoroutineRule.runBlockingTest {
+            //При вызове Репозитория возвращаем шаблонные данные
+            `when`(repository.searchGithubAsync(SEARCH_QUERY)).thenReturn(
+                    SearchResponse(1, listOf())
+            )
+
+            searchViewModel.searchGitHub(SEARCH_QUERY)
+            verify(repository, times(1)).searchGithubAsync(SEARCH_QUERY)
+        }
+    }
+
     @Test
     fun coroutines_TestReturnValueIsNotNull() {
         testCoroutineRule.runBlockingTest {
@@ -77,6 +91,35 @@ class SearchViewModelTest {
                 //Убеждаемся, что Репозиторий вернул данные и LiveData передала их Наблюдателям
                 Assert.assertNotNull(liveData.value)
 
+            } finally {
+                //Тест закончен, снимаем Наблюдателя
+                liveData.removeObserver(observer)
+            }
+        }
+    }
+
+    //********** Проверим что вернулось правильное значение totalCount *************
+    @Test
+    fun coroutines_TestReturnRightValue_HW() {
+        testCoroutineRule.runBlockingTest {
+            //Создаем обсервер. В лямбде мы не вызываем никакие методы - в этом нет необходимости
+            //так как мы проверяем работу LiveData и не собираемся ничего делать с данными,
+            //которые она возвращает
+            val observer = Observer<ScreenState> {}
+            //Получаем LiveData - вынесена, чтобы удалить observer в конце
+            val liveData = searchViewModel.subscribeToLiveData()
+
+            //При вызове Репозитория возвращаем шаблонные данные
+            `when`(repository.searchGithubAsync(SEARCH_QUERY)).thenReturn(
+                    SearchResponse(1, listOf())
+            )
+
+            try {
+                //этот метод позволяет подписаться на уведомления и не отписываться от них никогда
+                //Подписываемся на LiveData без учета жизненного цикла
+                liveData.observeForever(observer)
+                searchViewModel.searchGitHub(SEARCH_QUERY)
+
                 val result = liveData.value as ScreenState.Working
                 //Убеждаемся, что Репозиторий вернул totalCount = 1
                 Assert.assertEquals(1, result.searchResponse.totalCount)
@@ -87,7 +130,39 @@ class SearchViewModelTest {
         }
     }
 
-    //проверяем обработку ошибки
+    //********** Проверим что вернулось правильное значение размера списка *************
+    @Test
+    fun coroutines_TestReturnRightListSize_HW() {
+        testCoroutineRule.runBlockingTest {
+            //Создаем обсервер. В лямбде мы не вызываем никакие методы - в этом нет необходимости
+            //так как мы проверяем работу LiveData и не собираемся ничего делать с данными,
+            //которые она возвращает
+            val observer = Observer<ScreenState> {}
+            //Получаем LiveData - вынесена, чтобы удалить observer в конце
+            val liveData = searchViewModel.subscribeToLiveData()
+
+            //При вызове Репозитория возвращаем шаблонные данные
+            `when`(repository.searchGithubAsync(SEARCH_QUERY)).thenReturn(
+                    SearchResponse(1, listOf())
+            )
+
+            try {
+                //этот метод позволяет подписаться на уведомления и не отписываться от них никогда
+                //Подписываемся на LiveData без учета жизненного цикла
+                liveData.observeForever(observer)
+                searchViewModel.searchGitHub(SEARCH_QUERY)
+
+                val result = liveData.value as ScreenState.Working
+                //Убеждаемся, что Репозиторий вернул totalCount = 1
+                Assert.assertEquals(0, result.searchResponse.searchResults?.size)
+            } finally {
+                //Тест закончен, снимаем Наблюдателя
+                liveData.removeObserver(observer)
+            }
+        }
+    }
+
+    //проверяем обработку ошибки если totalCount = null
     @Test
     fun coroutines_TestReturnValueIsError() {
         testCoroutineRule.runBlockingTest {
@@ -96,6 +171,29 @@ class SearchViewModelTest {
 
             `when`(repository.searchGithubAsync(SEARCH_QUERY)).thenReturn(
                 SearchResponse(null, listOf())
+            )
+
+            try {
+                liveData.observeForever(observer)
+                searchViewModel.searchGitHub(SEARCH_QUERY)
+
+                val value: ScreenState.Error = liveData.value as ScreenState.Error
+                Assert.assertEquals(value.error.message, ERROR_TEXT)
+            } finally {
+                liveData.removeObserver(observer)
+            }
+        }
+    }
+
+    //************* проверяем обработку ошибки если список = null **************
+    @Test
+    fun coroutines_TestReturnListIsError_HW() {
+        testCoroutineRule.runBlockingTest {
+            val observer = Observer<ScreenState> {}
+            val liveData = searchViewModel.subscribeToLiveData()
+
+            `when`(repository.searchGithubAsync(SEARCH_QUERY)).thenReturn(
+                    SearchResponse(1, null)
             )
 
             try {

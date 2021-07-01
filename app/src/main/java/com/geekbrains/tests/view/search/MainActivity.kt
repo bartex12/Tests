@@ -16,7 +16,7 @@ import com.geekbrains.tests.viewmodel.SearchViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity() {
+class   MainActivity : AppCompatActivity() {
 
     private val adapter = SearchResultAdapter()
     private var totalCount: Int = 0
